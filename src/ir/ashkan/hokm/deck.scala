@@ -34,11 +34,13 @@ case class Card(suite: Suite, rank: Rank) {
   override def toString = {
     import Card._
 
-   color(suite) + s"$rank$suite" + Console.RESET
+    val card: String = color(suite) + s"$rank$suite" + Console.RESET
+    if(suite == Card.trumps)  Console.YELLOW + s"\u2654"  + card else card
   }
 }
 
 object Card {
+  var trumps: Suite = null
   val black = Console.BLACK_B + Console.CYAN
   val red = Console.BLACK_B + Console.RED
   val color = Map( Hearts -> red,  Diamonds -> red, Clubs -> black, Spades -> black)

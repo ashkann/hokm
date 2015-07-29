@@ -1,19 +1,39 @@
 package ir.ashkan.hokm
 
-import scala.Console.println
+import ir.ashkan.hokm.Deck.{Deck, Hand}
+
+import Console.println
 import scala.collection.SortedMap
 import scala.util.Random
 
 object Game extends App {
-  implicit val ordering = CardOrderingForConsole
-  def printHand(hand: Deck.Hand): String = hand.toList.sorted mkString " "
+  import DSL._
 
-  class Player(val name: String, val hand: Deck.Hand) {
-    override def toString = s"$name ${printHand(hand)}"
+  implicit val ordering = CardOrderingForConsole
+
+  class Player(val name: String, val hand: Hand) {
+    override def toString = this match {
+      case `trumpCaller` => Console.YELLOW + s"\u2654" + Console.RESET + name
+      case `trumpCallerTeamMate` => s"\u2654" + name
+      case _ => name
+    }
   }
 
   class Team(val player1: Player, val player2: Player) {
     override def toString = s"$player1 and $player2"
+  }
+
+  class Trick(val lead: Player) {
+    val secondPlayer = nextPlayer(lead)
+    val thirdPlayer = nextPlayer(secondPlayer)
+    val fourthPlayer = nextPlayer(thirdPlayer)
+
+    def nextPlayer(current: Player) = current match {
+      case team1.player1 => team2.player1
+      case team2.player1 => team1.player2
+      case team1.player2 => team2.player2
+      case team2.player2 => team1.player1
+    }
   }
 
   val (h1,h2,h3,h4) = Deck.deal
@@ -23,31 +43,73 @@ object Game extends App {
     new Player("Edward", h3),
     new Player("Ashkan", h4)
   ))
-  val team1 = new Team(p1,p2)
-  val team2 = new Team(p3,p4)
+  val team1 = new Team(p1,p3)
+  val team2 = new Team(p2,p4)
   val trumpCaller = team1.player1
+  val trumpCallerTeamMate = team1.player2
 
-  println(s"Team 1 : $team1")
-  println(s"Team 2 : $team2")
-  println(s"Trump-caller is ${trumpCaller.name}")
+  println(s"$team1 vs $team2")
 
-  println("Call trumps:")
+  println(s"$trumpCaller, call trumps:")
   val trumps = pickCard(trumpCaller, 5).suite
+  Card.trumps = trumps
   println(s"Trumps are $trumps")
 
-  private def pickCard(player: Player, howMany: Int = Deck.HandSize): Card = {
-    require(howMany >=0 && howMany < Deck.HandSize)
+  val trick = new Trick(trumpCaller)
+  playTrick(trick)
+  println(trick)
+
+  def playTrick(trick: Trick): (Card,Card,Card,Card) = {
+    val lead = playCard(trick.lead, "you are the trick-leader. Play a card")
+    val card2 = playCard(trick.secondPlayer, "it's your turn. Play a card")
+    val card3 = playCard(trick.thirdPlayer, "it's your turn. Play a card")
+    val card4 = playCard(trick.fourthPlayer, "it's your turn. Play a card")
+    (lead, card2, card3, card4)
+  }
+
+  def playCard(player: Player , msg: String): Card = {
+    println(s"$player, $msg")
+    val card = pickCard(player)
+    player.hand.remove(card)
+    println(s"$player played $card")
+    card
+  }
+
+  def pickCard(player: Player, howMany: Int = Deck.HandSize): Card = {
+    require(howMany >0 && howMany <= Deck.HandSize)
     pickCard(player.hand.toList.take(howMany))
   }
 
-  def pickCard(deck: List[Card]): Card = {
+  def pickCard(deck: Deck): Card = {
     val menu = SortedMap(('a' to 'z').zip(deck.sorted) :_*)
-    println("Pick a card:")
-    println(menu map { case (choice, card) => s" $choice $card" } mkString " ")
-    println("Which one ? ")
-    System.exit(1)
-    val choice = scala.io.StdIn.readChar()
-    deck(choice)
+    val validChoices = menu.keys.toSet
 
+    val choice = repeatUntil {
+      println(menu map { case (choice, card) => s"$choice $card" } mkString " ")
+      println("Which one ? ")
+      scala.io.StdIn.readChar()
+    } (choice => validChoices contains choice)
+
+    menu(choice)
   }
+}
+
+object DSL {
+  /**
+   * Repeatedly performs a piece of code and checks the result until a condition holds
+   * @param code The piece of code to execute
+   * @param condition The condition to observe
+   * @tparam T Type of the result that code returns
+   * @return The result for the last execution of code for which the condition was True
+   */
+  def repeatUntil[T](code: =>T)(condition: T => Boolean): T = {
+    code match {
+      case result if condition(result) => result
+      case _ => repeatUntil(code)(condition)
+    }
+  }
+}
+
+object Semantics {
+
 }
