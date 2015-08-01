@@ -5,5 +5,9 @@
     <option name="uncheckedWarnings" value="true" />
     <option name="featureWarnings" value="true" />
     <option name="explainTypeErrors" value="true" />
+    <profile name="SBT 1" modules="root">
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+    </profile>
   </component>
 </project>

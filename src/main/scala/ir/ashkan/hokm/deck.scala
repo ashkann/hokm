@@ -1,4 +1,4 @@
-package ir.ashkan.hokm
+package scala.ir.ashkan.hokm
 
 import scala.collection.mutable
 import scala.util.Random
