@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Hokm.iml" filepath="$PROJECT_DIR$/Hokm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hokm.iml" filepath="$PROJECT_DIR$/.idea/modules/Hokm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Hokm-build.iml" filepath="$PROJECT_DIR$/.idea/modules/Hokm-build.iml" />
     </modules>
   </component>
 </project>

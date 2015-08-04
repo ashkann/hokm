@@ -3,7 +3,7 @@ package scala.ir.ashkan.hokm
 import scala.collection.mutable
 import scala.util.Random
 
-sealed class Suite(val symbol: Char) {
+sealed abstract class Suite(val symbol: Char) {
   override def toString = s"$symbol"
 }
 object Hearts extends Suite('\u2665')
@@ -41,8 +41,8 @@ case class Card(suite: Suite, rank: Rank) {
 
 object Card {
   var trumps: Suite = null
-  val black = Console.BLACK_B + Console.CYAN
-  val red = Console.BLACK_B + Console.RED
+  val black = Console.WHITE_B+ Console.BLACK
+  val red = Console.WHITE_B + Console.RED
   val color = Map( Hearts -> red,  Diamonds -> red, Clubs -> black, Spades -> black)
 }
 
