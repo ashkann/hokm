@@ -1,10 +1,10 @@
-package ir.ashkan.hokm.tests
+package ir.ashkan.hokm
 
 import org.scalatest._
 
 import scala.collection.mutable.Stack
 
-class ExampleSpec extends FlatSpec with Matchers {
+class GameTest extends FlatSpec with Matchers {
 
   "A Stack" should "pop values in last-in-first-out order" in {
     val stack = new Stack[Int]
