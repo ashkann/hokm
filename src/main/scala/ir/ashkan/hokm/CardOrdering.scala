@@ -1,19 +1,18 @@
 package ir.ashkan.hokm
 
-class CardOrdering(suiteOrdering: Ordering[Suite], rankOrdering: Ordering[Rank]) extends Ordering[Card] {
-  override def compare(left: Card, right: Card) = if(left.suite == right.suite)
-    rankOrdering.compare(left.rank,right.rank)
-  else
-    suiteOrdering.compare(left.suite,right.suite)
+class CardOrdering(suites: SuiteOrdering, ranks: RankOrdering) extends Ordering[Card] {
+  def compare(left: Card, right: Card) = suites.compare(left.suite, right.suite) match {
+    case 0 => ranks.compare(left.rank, right.rank)
+    case winnerSuite => winnerSuite
+  }
 }
 
-object CardOrderingForConsole extends CardOrdering(SuiteOrderingForConsole,RankOrderingForConsole)
+object CardOrdering {
+  var orderingInEffect: CardOrdering = new CardOrdering(SuiteOrdering.orderingInEffect,RankOrdering.orderingInEffect) {}
 
-object SuiteOrderingForConsole extends Ordering[Suite] {
-  private val order: Map[Suite,Int] = List(Hearts,Spades,Diamonds,Clubs).zipWithIndex.toMap
-  override def compare(left: Suite, right: Suite) = order(left) - order(right)
-}
+  def apply(suites: SuiteOrdering, ranks: RankOrdering) = new CardOrdering(suites,ranks)
 
-object RankOrderingForConsole  extends Ordering[Rank] {
-  override def compare(left: Rank, right: Rank) = right.rank - left.rank
+  implicit class OrderedCard(card: Card) extends Ordered[Card] {
+    def compare(that: Card) = orderingInEffect.compare(card,that)
+  }
 }

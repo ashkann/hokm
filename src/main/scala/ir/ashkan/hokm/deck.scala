@@ -29,12 +29,12 @@ object King extends Rank(13,"K")
 object Ace extends Rank(14,"A")
 
 case class Card(suite: Suite, rank: Rank) {
-  override def toString = {
-    import Card._
-
-    val card: String = color(suite) + s"$rank$suite" + Console.RESET
-    if(suite == Card.trumps)  Console.YELLOW + s"\u2654"  + card else card
-  }
+//  override def toString = {
+//    import Card._
+//
+//    val card: String = color(suite) + s"$rank$suite" + Console.RESET
+//    if(suite == Card.trumps)  Console.YELLOW + s"\u2654"  + card else card
+//  }
 }
 
 object Card {

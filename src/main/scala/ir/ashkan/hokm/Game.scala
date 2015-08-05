@@ -7,6 +7,14 @@ import scala.util.Random
 object Game extends App {
   import DSL._
   import ir.ashkan.hokm.Deck.{Batch, Deck, Hand}
+  val RankOrderingForConsole = RankOrdering.naturalOrder
+  object CardOrderingForConsole extends CardOrdering(SuiteOrderingForConsole,RankOrderingForConsole)
+
+  object SuiteOrderingForConsole extends SuiteOrdering {
+    private val order: Map[Suite,Int] = Seq(Hearts,Spades,Diamonds,Clubs).zipWithIndex.toMap
+
+    def score(suite: Suite): Int = order(suite)
+  }
 
   implicit class ConsoleContext(private val sc:StringContext) extends {
     def hokm(args: Any*): String = {
