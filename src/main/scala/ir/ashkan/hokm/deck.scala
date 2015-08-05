@@ -1,15 +1,13 @@
-package scala.ir.ashkan.hokm
+package ir.ashkan.hokm
 
 import scala.collection.mutable
 import scala.util.Random
 
-sealed abstract class Suite(val symbol: Char) {
-  override def toString = s"$symbol"
-}
-object Hearts extends Suite('\u2665')
-object Spades extends Suite('\u2660')
-object Clubs extends Suite('\u2663')
-object Diamonds extends Suite('\u2666')
+sealed abstract class Suite
+object Hearts extends Suite
+object Spades extends Suite
+object Clubs extends Suite
+object Diamonds extends Suite
 
 sealed abstract class Rank(val rank: Int, val name:String) {
   def this(rank: Int) = this(rank,rank.toString)

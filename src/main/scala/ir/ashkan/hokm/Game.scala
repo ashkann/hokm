@@ -1,4 +1,4 @@
-package scala.ir.ashkan.hokm
+package ir.ashkan.hokm
 
 import scala.Console.println
 import scala.collection.SortedMap

@@ -1,4 +1,4 @@
-package scala.ir.ashkan.hokm
+package ir.ashkan.hokm
 
 class CardOrdering(suiteOrdering: Ordering[Suite], rankOrdering: Ordering[Rank]) extends Ordering[Card] {
   override def compare(left: Card, right: Card) = if(left.suite == right.suite)

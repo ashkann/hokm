@@ -1,4 +1,4 @@
-package scala.ir.ashkan.hokm
+package ir.ashkan.hokm
 
 /**
  * Created by ashkan on 8/1/15.
