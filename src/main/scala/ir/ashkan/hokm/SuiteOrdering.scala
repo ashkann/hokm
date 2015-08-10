@@ -9,6 +9,7 @@ object SuiteOrdering {
   var orderingInEffect: SuiteOrdering = _
 
   def apply(trumps: Suite): SuiteOrdering = new TrumpSuiteOrder(trumps)
+  def apply(s1: Suite, s2: Suite, s3: Suite, s4: Suite): SuiteOrdering = new ManualSuiteOrder(s1,s2,s3,s4)
 
   implicit class OrderedSuite(suite: Suite) extends Ordered[Suite] {
     def compare(that: Suite) = orderingInEffect.compare(suite,that)
@@ -20,5 +21,10 @@ object SuiteOrdering {
 
   class TrumpSuiteOrder(trumps: Suite) extends SuiteOrdering {
     def score(suite: Suite) = if(suite == trumps) 1 else 0
+  }
+
+  class ManualSuiteOrder(s1: Suite, s2: Suite, s3: Suite, s4: Suite) extends SuiteOrdering {
+    val scores = Map(s1->4,s2->3,s3->2,s4->1)
+    def score(suite: Suite) = scores(suite)
   }
 }

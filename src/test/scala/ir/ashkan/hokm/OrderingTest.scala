@@ -1,5 +1,6 @@
 package ir.ashkan.hokm
 
+import ir.ashkan.hokm.SuiteOrdering.ManualSuiteOrder
 import org.scalatest.{Assertions, FunSuite}
 
 class OrderingTest extends FunSuite with Assertions {
@@ -36,5 +37,13 @@ class OrderingTest extends FunSuite with Assertions {
     assert( winner > looser3)
 
     assert( winner == Set(looser3, looser1, winner, looser2).max )
+  }
+
+  test("Arbitrarily ordering suites") {
+    val ord = SuiteOrdering(Hearts,Spades,Clubs,Diamonds)
+    val ascending = Seq(Diamonds,Clubs,Spades,Hearts)
+    val descending = ascending.reverse
+
+    assert( ascending == descending.sorted(ord) )
   }
 }
