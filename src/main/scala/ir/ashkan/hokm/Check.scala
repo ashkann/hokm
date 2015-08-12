@@ -18,9 +18,16 @@ object Check extends App {
     }
   }
 
-  for( suite <- Seq(Hearts,Clubs,Diamonds,Spades)) {
-    val cs = Seq(_2,_3,_4,_5,_6,_7,_8,_9,_10,Jack,Queen,King,Ace) map { rank => h"${Card(suite,rank)}" }
-    println(cs mkString " ")
-    println()
+  renderer = renderer1
+  renderFullDeck()
+  renderer = renderer2
+  renderFullDeck()
+
+  def renderFullDeck(): Unit = {
+    for (suite <- Seq(Hearts, Clubs, Diamonds, Spades)) {
+      val cs = Seq(_2, _3, _4, _5, _6, _7, _8, _9, _10, Jack, Queen, King, Ace) map { rank => h"${Card(suite, rank)}" }
+      println(cs mkString " ")
+      println()
+    }
   }
 }

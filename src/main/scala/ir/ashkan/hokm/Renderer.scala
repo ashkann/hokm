@@ -53,6 +53,7 @@ object Renderer {
       b.toString()
     }
   }
-
-  val renderer = new Renderer(Console.WHITE_B, Console.BLACK, Console.RED)
+  val renderer1 = new Renderer(Console.WHITE_B, Console.BLACK, Console.RED)
+  val renderer2 = new Renderer(Console.YELLOW_B, Console.CYAN, Console.BLUE)
+  var renderer = renderer2
 }
