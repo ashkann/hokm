@@ -37,13 +37,20 @@ object Renderer {
 
   implicit class HokmStringContext(private val sc: StringContext) {
     def h(args: Any*): String = {
-      val interleaved = (sc.parts zip args).flatMap { case (arg, part) => Seq(arg, part) } ++ sc.parts.takeRight(sc.parts.length - args.length)
+      val as=args.iterator
+      val ps=sc.parts.iterator
+      val b = StringBuilder.newBuilder
+      while(as.hasNext) {
+        b ++= ps.next()
+        b ++= (as.next() match {
+          case s: Suite => renderer(s)
+          case Card(s, r) => renderer(s, r)
+          case other => other.toString
+        })
+      }
+      b ++= ps.next()
 
-      (interleaved map {
-        case s: Suite => renderer(s)
-        case Card(s, r) => renderer(s, r)
-        case other => other.toString
-      }).mkString
+      b.toString()
     }
   }
 
