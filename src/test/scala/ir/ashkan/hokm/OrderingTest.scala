@@ -1,6 +1,5 @@
 package ir.ashkan.hokm
 
-import ir.ashkan.hokm.SuiteOrdering.ManualSuiteOrder
 import org.scalatest.{Assertions, FunSuite}
 
 class OrderingTest extends FunSuite with Assertions {
