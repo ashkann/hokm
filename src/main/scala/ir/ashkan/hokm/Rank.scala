@@ -19,18 +19,9 @@ object Rank {
   val Queen = new Rank(12,"Q")
   val King = new Rank(13,"K")
   val Ace = new Rank(14,"A")
-  
-  implicit def fromInt(rank: Int): Rank = rank match {
-    case 2 => _2
-    case 3 => _3
-    case 4 => _4
-    case 5 => _5
-    case 6 => _6
-    case 7 => _7
-    case 8 => _8
-    case 9 => _9
-    case 10 => _10
-    case _ => throw new IllegalArgumentException(s"rank must be between 2 and 10, $rank provided")
-  }
   val ranks = Set(_2,_3,_4,_5,_6,_7,_8,_9,_10,Jack,Queen,King,Ace)
+
+  implicit def fromInt(rank: Int): Rank = int2Rank(rank)
+
+  private val int2Rank = Map(2->_2, 3->_3, 4->_4, 5->_5, 6->_6, 7->_7, 8->_8, 9->_9, 10->_10)
 }
