@@ -1,4 +1,6 @@
 package ir.ashkan.hokm
+import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
+
 class Renderer
 (
   val background: String,

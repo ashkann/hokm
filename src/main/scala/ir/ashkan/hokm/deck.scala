@@ -2,6 +2,7 @@ package ir.ashkan.hokm
 
 import scala.collection.mutable
 import scala.util.Random
+import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
 
 object Deck {
   type Hand = mutable.Set[Card]

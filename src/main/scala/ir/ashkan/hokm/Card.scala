@@ -10,6 +10,8 @@ case class Card(suite: Suite, rank: Rank) {
 }
 
 object Card {
+  import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
+
   var trumps: Suite = null
   val black = Console.WHITE_B+ Console.BLACK
   val red = Console.WHITE_B + Console.RED

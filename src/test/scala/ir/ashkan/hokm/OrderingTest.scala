@@ -1,6 +1,7 @@
 package ir.ashkan.hokm
 
 import org.scalatest.{Assertions, FunSuite}
+import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
 import SuiteOrdering.OrderedSuite
 import RankOrdering.OrderedRank
 import CardOrdering.OrderedCard

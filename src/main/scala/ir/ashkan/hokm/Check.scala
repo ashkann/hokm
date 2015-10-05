@@ -1,8 +1,9 @@
 package ir.ashkan.hokm
 import Renderer._
+import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
 
 object Check extends App {
-  val symbols = s"${Hearts} ${Spades} ${Diamonds} ${Clubs}"
+  val symbols = s"$Hearts $Spades $Diamonds $Clubs"
   val red: String = Console.WHITE_B + Console.RED + " RED " + Console.RESET
   val white: String = Console.RED_B + Console.WHITE + " WHITE " + Console.RESET
 

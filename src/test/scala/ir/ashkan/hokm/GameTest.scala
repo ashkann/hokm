@@ -2,6 +2,7 @@ package ir.ashkan.hokm
 
 import org.scalatest._
 import Renderer._
+import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
 
 class GameTest extends FunSuite with Matchers {
 
@@ -26,6 +27,7 @@ class GameTest extends FunSuite with Matchers {
   }
 
   test("Suites are rendered by Renderer.renderer") {
+
     h"$Hearts" should be(renderer(Hearts))
     h"$Diamonds" should be(renderer(Diamonds))
     h"$Clubs" should be(renderer(Clubs))
