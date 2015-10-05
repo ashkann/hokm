@@ -1,11 +1,12 @@
 package ir.ashkan.hokm
 
 import org.scalatest.{Assertions, FunSuite}
+import SuiteOrdering.OrderedSuite
+import RankOrdering.OrderedRank
+import CardOrdering.OrderedCard
+import Rank.fromInt
 
 class OrderingTest extends FunSuite with Assertions {
-  import SuiteOrdering.OrderedSuite
-  import RankOrdering.OrderedRank
-  import CardOrdering.OrderedCard
 
   test("Trumps are above all") {
     SuiteOrdering.orderingInEffect = SuiteOrdering(Spades)
@@ -18,18 +19,19 @@ class OrderingTest extends FunSuite with Assertions {
   }
 
   test("Ranks are naturally ordered") {
-    val smallerToBigger = Seq(_2,_3,_4,_5,_6,_7,_8,_9,_10,Jack,Queen,King,Ace)
+    val ascending : Seq[Rank] = Seq(2,3,4,5,6,7,8,9,10,Jack,Queen,King,Ace)
+    val descending : Seq[Rank] = Seq(Ace,King,Queen,Jack,10,9,8,7,6,5,4,3,2)
 
-    assert( Seq(Ace,King,Queen,Jack,_10,_9,_8,_7,_6,_5,_4,_3,_2) == smallerToBigger.sortWith { _ > _ } )
+    assert( descending == ascending.sortWith { _ > _ } )
   }
 
   test("A trump card wins over all cards from other suites (including higher ranks)") {
     CardOrdering.orderingInEffect = CardOrdering(SuiteOrdering(Spades),RankOrdering.naturalOrder)
 
-    val winner  = Card(Spades, _2)
-    val looser1 = Card(Hearts, Ace)
-    val looser2 = Card(Diamonds, Ace)
-    val looser3 = Card(Clubs, Ace)
+    val winner = 2 of Spades
+    val looser1 = 3 of Hearts
+    val looser2 = Queen of Diamonds
+    val looser3 = King of Clubs
 
     assert( winner > looser1)
     assert( winner > looser2)

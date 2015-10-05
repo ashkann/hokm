@@ -1,4 +1,5 @@
 lazy val Hokm = (project in file(".")).settings(
+
   name := "Hokm",
   version := "1.0",
   scalaVersion := "2.11.7",

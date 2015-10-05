@@ -15,6 +15,21 @@ object Diamonds extends Suite('\u2666')
 sealed abstract class Rank(val rank: Int, val name:String) {
   def this(rank: Int) = this(rank,rank.toString)
   override def toString = name
+  def of(suite: Suite): Card = Card(suite,this)
+}
+
+object Rank {
+  implicit def fromInt(rank: Int): Rank = rank match {
+    case 2 => _2
+    case 3 => _3
+    case 4 => _4
+    case 5 => _5
+    case 6 => _6
+    case 7 => _7
+    case 8 => _8
+    case 9 => _9
+    case 10 => _10
+  }
 }
 
 object _2 extends Rank(2)
@@ -32,12 +47,12 @@ object King extends Rank(13,"K")
 object Ace extends Rank(14,"A")
 
 case class Card(suite: Suite, rank: Rank) {
-//  override def toString = {
-//    import Card._
-//
-//    val card: String = color(suite) + s"$rank$suite" + Console.RESET
-//    if(suite == Card.trumps)  Console.YELLOW + s"\u2654"  + card else card
-//  }
+  override def toString = {
+    import Card._
+
+    val card: String = color(suite) + s"$rank$suite" + Console.RESET
+    if(suite == Card.trumps)  Console.YELLOW + s"\u2654"  + card else card
+  }
 }
 
 object Card {
