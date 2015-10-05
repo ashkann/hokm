@@ -5,13 +5,18 @@ import scala.util.Random
 
 // Suites
 sealed abstract class Suite(val symbol:Char) {
- override def toString = s"$symbol"
+  override def toString = s"$symbol"
+  val cards: Set[Card] = Rank.ranks.map { _ of this }
 }
 
 object Hearts extends Suite('\u2665')
 object Spades extends Suite('\u2660')
 object Clubs extends Suite('\u2663')
 object Diamonds extends Suite('\u2666')
+
+object Suite {
+  val suites = Set(Hearts,Spades,Clubs,Diamonds)
+}
 
 // Ranks
 sealed abstract class Rank(val rank: Int, val name:String) {
@@ -75,10 +80,10 @@ object Deck {
   val HandSize = 13
   val DeckSize = 52
 
-  val hearts:   Set[Card] = Rank.ranks.map { _ of Hearts}
-  val spades:   Set[Card] = Rank.ranks.map { _ of Spades }
-  val clubs:    Set[Card] = Rank.ranks.map { _ of Clubs }
-  val diamonds: Set[Card] = Rank.ranks.map { _ of Diamonds }
+  val hearts   = Hearts.cards
+  val spades   = Spades.cards
+  val clubs    = Clubs.cards
+  val diamonds = Diamonds.cards
 
   val allCards: Batch = hearts ++ clubs ++ spades ++ diamonds
   def deck: Deck = Random.shuffle(Deck.allCards.toList)
