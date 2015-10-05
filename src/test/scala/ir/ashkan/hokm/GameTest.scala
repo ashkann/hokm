@@ -3,6 +3,7 @@ package ir.ashkan.hokm
 import org.scalatest._
 import Renderer._
 import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
+import ir.ashkan.hokm.Rank.{_2,_3,_4,_5,_6,_7,_8,_9,_10,Jack,Queen,King,Ace}
 
 class GameTest extends FunSuite with Matchers {
 

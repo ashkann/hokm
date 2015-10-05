@@ -1,5 +1,7 @@
 package ir.ashkan.hokm
 
+import ir.ashkan.hokm.Rank.{_2,_3,_4,_5,_6,_7,_8,_9,_10,Jack,Queen,King,Ace}
+
 abstract class RankOrdering extends Ordering[Rank] {
   def score(rank: Rank): Int
   def compare(left: Rank, right: Rank) = score(left) - score(right)

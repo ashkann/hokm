@@ -1,26 +1,25 @@
 package ir.ashkan.hokm
 
-sealed abstract class Rank(val rank: Int, val name:String) {
-  def this(rank: Int) = this(rank,rank.toString)
+class Rank private (val rank: Int, val name: String) {
   override def toString = name
   def of(suite: Suite): Card = Card(suite,this)
 }
 
-object _2 extends Rank(2)
-object _3 extends Rank(3)
-object _4 extends Rank(4)
-object _5 extends Rank(5)
-object _6 extends Rank(6)
-object _7 extends Rank(7)
-object _8 extends Rank(8)
-object _9 extends Rank(9)
-object _10 extends Rank(10)
-object Jack extends Rank(11,"J")
-object Queen extends Rank(12,"Q")
-object King extends Rank(13,"K")
-object Ace extends Rank(14,"A")
-
 object Rank {
+  val _2 = new Rank(2,"2")
+  val _3 = new Rank(3,"3")
+  val _4 = new Rank(4,"4")
+  val _5 = new Rank(5,"5")
+  val _6 = new Rank(6,"6")
+  val _7 = new Rank(7,"7")
+  val _8 = new Rank(8,"8")
+  val _9 = new Rank(9,"9")
+  val _10 = new Rank(10,"10")
+  val Jack = new Rank(11,"J")
+  val Queen = new Rank(12,"Q")
+  val King = new Rank(13,"K")
+  val Ace = new Rank(14,"A")
+  
   implicit def fromInt(rank: Int): Rank = rank match {
     case 2 => _2
     case 3 => _3
