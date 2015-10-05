@@ -25,7 +25,7 @@ class OrderingTest extends FunSuite with Assertions {
     assert( descending == ascending.sortWith { _ > _ } )
   }
 
-  test("A trump card wins over all cards from other suites (including higher ranks)") {
+  test("A trump card takes *all* plain cards (even plain cards with higher ranks)") {
     CardOrdering.orderingInEffect = CardOrdering(SuiteOrdering(Spades),RankOrdering.naturalOrder)
 
     val winner = 2 of Spades

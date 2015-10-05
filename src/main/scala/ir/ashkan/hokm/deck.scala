@@ -29,6 +29,7 @@ object Rank {
     case 8 => _8
     case 9 => _9
     case 10 => _10
+    case _ => throw new IllegalArgumentException(s"rank must be between 2 and 10, $rank provided")
   }
 }
 
@@ -62,8 +63,6 @@ object Card {
   val color = Map( Hearts -> red,  Diamonds -> red, Clubs -> black, Spades -> black)
 }
 
-
-
 object Deck {
   type Hand = mutable.Set[Card]
   type Batch = Set[Card]
@@ -73,15 +72,15 @@ object Deck {
   val DeckSize = 52
 
   val hearts: Batch = Set(
-    Card(Hearts, _2),
-    Card(Hearts, _3),
-    Card(Hearts, _4),
-    Card(Hearts, _5),
-    Card(Hearts, _6),
-    Card(Hearts, _7),
-    Card(Hearts, _8),
-    Card(Hearts, _9),
-    Card(Hearts, _10),
+    Card(Hearts, 2),
+    Card(Hearts, 3),
+    Card(Hearts, 4),
+    Card(Hearts, 5),
+    Card(Hearts, 6),
+    Card(Hearts, 7),
+    Card(Hearts, 8),
+    Card(Hearts, 9),
+    Card(Hearts, 10),
     Card(Hearts, Jack),
     Card(Hearts, Queen),
     Card(Hearts, King),
@@ -89,15 +88,15 @@ object Deck {
   )
 
   val spades: Batch = Set(
-    Card(Spades, _2),
-    Card(Spades, _3),
-    Card(Spades, _4),
-    Card(Spades, _5),
-    Card(Spades, _6),
-    Card(Spades, _7),
-    Card(Spades, _8),
-    Card(Spades, _9),
-    Card(Spades, _10),
+    Card(Spades, 2),
+    Card(Spades, 3),
+    Card(Spades, 4),
+    Card(Spades, 5),
+    Card(Spades, 6),
+    Card(Spades, 7),
+    Card(Spades, 8),
+    Card(Spades, 9),
+    Card(Spades, 10),
     Card(Spades, Jack),
     Card(Spades, Queen),
     Card(Spades, King),
@@ -105,15 +104,15 @@ object Deck {
   )
 
   val clubs: Batch = Set(
-    Card(Clubs, _2),
-    Card(Clubs, _3),
-    Card(Clubs, _4),
-    Card(Clubs, _5),
-    Card(Clubs, _6),
-    Card(Clubs, _7),
-    Card(Clubs, _8),
-    Card(Clubs, _9),
-    Card(Clubs, _10),
+    Card(Clubs, 2),
+    Card(Clubs, 3),
+    Card(Clubs, 4),
+    Card(Clubs, 5),
+    Card(Clubs, 6),
+    Card(Clubs, 7),
+    Card(Clubs, 8),
+    Card(Clubs, 9),
+    Card(Clubs, 10),
     Card(Clubs, Jack),
     Card(Clubs, Queen),
     Card(Clubs, King),
@@ -121,15 +120,15 @@ object Deck {
   )
 
   val diamonds:Batch = Set(
-    Card(Diamonds, _2),
-    Card(Diamonds, _3),
-    Card(Diamonds, _4),
-    Card(Diamonds, _5),
-    Card(Diamonds, _6),
-    Card(Diamonds, _7),
-    Card(Diamonds, _8),
-    Card(Diamonds, _9),
-    Card(Diamonds, _10),
+    Card(Diamonds, 2),
+    Card(Diamonds, 3),
+    Card(Diamonds, 4),
+    Card(Diamonds, 5),
+    Card(Diamonds, 6),
+    Card(Diamonds, 7),
+    Card(Diamonds, 8),
+    Card(Diamonds, 9),
+    Card(Diamonds, 10),
     Card(Diamonds, Jack),
     Card(Diamonds, Queen),
     Card(Diamonds, King),
