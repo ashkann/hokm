@@ -13,6 +13,7 @@ object SuiteOrdering {
 
   implicit class OrderedSuite(suite: Suite) extends Ordered[Suite] {
     def compare(that: Suite) = orderingInEffect.compare(suite,that)
+    def takes(that: Suite) = this > that
   }
 
   object NeutralSuiteOrder extends SuiteOrdering {

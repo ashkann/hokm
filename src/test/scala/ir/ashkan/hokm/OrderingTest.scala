@@ -10,17 +10,17 @@ import Rank.fromInt
 
 class OrderingTest extends FunSuite with Assertions {
 
-  test("Trumps are above all") {
+  test("Trumps take plain suites") {
     SuiteOrdering.orderingInEffect = SuiteOrdering(Spades)
 
-    assert(Spades > Diamonds)
-    assert(Spades > Clubs)
-    assert(Spades > Hearts)
+    assert(Spades takes Diamonds)
+    assert(Spades takes Clubs)
+    assert(Spades takes Hearts)
 
     assert(Spades == Set(Diamonds,Spades,Hearts,Clubs).max)
   }
 
-  test("Ranks are naturally ordered") {
+  test("Higher ranks take lower ranks") {
     val ascending : Seq[Rank] = Seq(2,3,4,5,6,7,8,9,10,Jack,Queen,King,Ace)
     val descending : Seq[Rank] = Seq(Ace,King,Queen,Jack,10,9,8,7,6,5,4,3,2)
 

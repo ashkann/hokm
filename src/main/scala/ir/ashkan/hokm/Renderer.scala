@@ -19,24 +19,6 @@ class Renderer
 }
 
 object Renderer {
-
-  //      (r match {
-  //    case _2 => "2"
-  //    case _3 => "3"
-  //    case _4 => "4"
-  //    case _5 => "5"
-  //    case _6 => "6"
-  //    case _7 => "7"
-  //    case _8 => "8"
-  //    case _9 => "9"
-  //    case _10 => "10"
-  //    case Jack => "J"
-  //    case Queen => "Q"
-  //    case King => "K"
-  //    case Ace => "A"
-  //    }
-  //      )
-
   implicit class HokmStringContext(private val sc: StringContext) {
     def h(args: Any*): String = {
       val as=args.iterator
