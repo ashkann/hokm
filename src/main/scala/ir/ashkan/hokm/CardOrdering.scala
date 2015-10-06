@@ -14,5 +14,7 @@ object CardOrdering {
 
   implicit class OrderedCard(card: Card) extends Ordered[Card] {
     def compare(that: Card) = orderingInEffect.compare(card,that)
+    def takes(that: Card) = this > that
+    def takes(others: Set[Card]): Boolean = others.forall { this takes _ }
   }
 }

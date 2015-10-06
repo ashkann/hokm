@@ -10,36 +10,33 @@ import Rank.fromInt
 
 class OrderingTest extends FunSuite with Assertions {
 
-  test("Trumps take plain suites") {
+  test("Trump takes plain suites") {
     SuiteOrdering.orderingInEffect = SuiteOrdering(Spades)
 
     assert(Spades takes Diamonds)
     assert(Spades takes Clubs)
     assert(Spades takes Hearts)
 
-    assert(Spades == Set(Diamonds,Spades,Hearts,Clubs).max)
+    assert(Spades takes Set(Diamonds,Hearts,Clubs))
   }
 
   test("Higher ranks take lower ranks") {
-    val ascending : Seq[Rank] = Seq(2,3,4,5,6,7,8,9,10,Jack,Queen,King,Ace)
-    val descending : Seq[Rank] = Seq(Ace,King,Queen,Jack,10,9,8,7,6,5,4,3,2)
-
-    assert( descending == ascending.sortWith { _ > _ } )
+    assert( Ace takes Rank.ranks.filter { _  != Ace })
+    assert( King takes Queen)
+    assert( Queen takes Jack )
+    assert( Jack takes Set(_10,_9,_8) )
+    assert( _4  takes Set(_3,_2) )
   }
 
-  test("A trump card takes *all* plain cards (even plain cards with higher ranks)") {
+  test("Trumps take all plain cards") {
     CardOrdering.orderingInEffect = CardOrdering(SuiteOrdering(Spades),RankOrdering.naturalOrder)
 
-    val winner = 2 of Spades
-    val looser1 = 3 of Hearts
-    val looser2 = Queen of Diamonds
-    val looser3 = King of Clubs
+    val trump = 2 of Spades
+    assert( trump takes (3 of Hearts))
+    assert( trump takes (Queen of Diamonds))
+    assert( trump takes (King of Clubs))
 
-    assert( winner > looser1)
-    assert( winner > looser2)
-    assert( winner > looser3)
-
-    assert( winner == Set(looser3, looser1, winner, looser2).max )
+    assert( (10 of Spades) takes Set(2 of Clubs, Ace of Hearts, King of Diamonds) )
   }
 
   test("Arbitrarily ordering suites") {
