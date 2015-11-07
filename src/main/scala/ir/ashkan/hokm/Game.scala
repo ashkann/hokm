@@ -1,7 +1,7 @@
 package ir.ashkan.hokm
 
 import ir.ashkan.hokm.Deck._
-
+import ir.ashkan.hokm.Suite._
 import scala.Console.println
 import scala.collection.SortedMap
 import scala.util.Random
@@ -10,15 +10,7 @@ object Game extends App { gameInProgress =>
   import DSL._
   import ir.ashkan.hokm.Deck.{Batch, Deck, Hand}
 
-  val RankOrderingForConsole = RankOrdering.naturalOrder
-  object SuiteOrderingForConsole extends SuiteOrdering {
-    import Suite.{Hearts,Spades,Diamonds,Clubs}
-    private val order: Map[Suite,Int] = Seq(Hearts,Spades,Diamonds,Clubs).zipWithIndex.toMap
-
-    def score(suite: Suite): Int = order(suite)
-  }
-
-  object CardOrderingForConsole extends CardOrdering(SuiteOrderingForConsole,RankOrderingForConsole)
+  implicit val ordering = CardOrdering(SuiteOrdering(Hearts, Spades, Diamonds, Clubs), RankOrdering.natural)
 
   implicit class ConsoleContext(private val sc:StringContext) extends {
     def hokm(args: Any*): String = {
@@ -27,11 +19,9 @@ object Game extends App { gameInProgress =>
         case _ => "Dunno!"
       }
 
-
       (vs mkString ",") + (sc.parts mkString "|")
     }
   }
-
 
   val (h1,h2,h3,h4) = Deck.deal
   val List(p1,p2,p3,p4) = Random.shuffle(List(
@@ -48,7 +38,7 @@ object Game extends App { gameInProgress =>
   val Crown = '\u2654'
   val TrumpCallerTeamMateCrown = Crown + Console.RESET
   val TrumpCallerCrown = Console.BOLD + Console.YELLOW + TrumpCallerTeamMateCrown
-  implicit val ordering = CardOrderingForConsole
+
 
   println(hokm"$team1 vs $team2")
 

@@ -29,7 +29,7 @@ class OrderingTest extends FunSuite with Assertions {
   }
 
   test("Trumps take all plain cards") {
-    CardOrdering.orderingInEffect = CardOrdering(SuiteOrdering(Spades),RankOrdering.naturalOrder)
+    CardOrdering.orderingInEffect = CardOrdering(SuiteOrdering(Spades),RankOrdering.natural)
 
     val trump = 2 of Spades
     assert( trump takes (3 of Hearts))
