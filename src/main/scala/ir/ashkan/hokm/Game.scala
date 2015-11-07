@@ -1,22 +1,24 @@
 package ir.ashkan.hokm
 
+import ir.ashkan.hokm.Deck._
+
 import scala.Console.println
 import scala.collection.SortedMap
 import scala.util.Random
 
-object Game extends App {
+object Game extends App { gameInProgress =>
   import DSL._
   import ir.ashkan.hokm.Deck.{Batch, Deck, Hand}
 
   val RankOrderingForConsole = RankOrdering.naturalOrder
-  object CardOrderingForConsole extends CardOrdering(SuiteOrderingForConsole,RankOrderingForConsole)
-
   object SuiteOrderingForConsole extends SuiteOrdering {
     import Suite.{Hearts,Spades,Diamonds,Clubs}
     private val order: Map[Suite,Int] = Seq(Hearts,Spades,Diamonds,Clubs).zipWithIndex.toMap
 
     def score(suite: Suite): Int = order(suite)
   }
+
+  object CardOrderingForConsole extends CardOrdering(SuiteOrderingForConsole,RankOrderingForConsole)
 
   implicit class ConsoleContext(private val sc:StringContext) extends {
     def hokm(args: Any*): String = {
@@ -53,8 +55,11 @@ object Game extends App {
   println(s"$team1 vs $team2")
   println(s"$trumpCaller, call trumps:")
 
+  val interface = new ConsoleInterface {
+    val cardOrdering = ordering
+  }
 
-  val trumps = pickCard(trumpCaller, 5).suite
+  val trumps = interface.pickCard(trumpCaller, 5).suite
   Card.trumps = trumps
 
   var lead = trumpCaller
@@ -152,15 +157,22 @@ object Game extends App {
 
   def playTrick(trick: Trick) {
     println(s"${trick.lead}, you are the trick-leader. Play a card")
-    trick(1) = pickCard(trick.lead)
+    trick(1) = interface.pickCard(trick.lead)
     println(trick)
 
     for(turn <- 2 to 4) {
       println(s"${trick.player(turn)}, play a card")
-      trick(turn) = pickCard(trick.player(turn),trick.leadSuite)
+      trick(turn) = interface.pickCard(trick.player(turn),trick.leadSuite)
       println(trick)
     }
   }
+}
+
+abstract class ConsoleInterface {
+  import DSL._
+  import Game.Player
+
+  implicit def cardOrdering: Ordering[Card]
 
   def pickCard(player: Player, howMany: Int = Deck.HandSize): Card = {
     require(howMany >0 && howMany <= Deck.HandSize)
@@ -203,6 +215,8 @@ object Game extends App {
   }
 }
 
+
+
 object DSL {
   /**
    * Repeatedly performs a piece of code and checks the result until a condition holds
@@ -217,8 +231,4 @@ object DSL {
       case _ => repeatUntil(code)(condition)
     }
   }
-}
-
-object Semantics {
-
 }
