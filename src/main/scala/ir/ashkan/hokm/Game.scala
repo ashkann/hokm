@@ -1,5 +1,8 @@
 package ir.ashkan.hokm
 
+import java.io.Serializable
+import java.lang.System
+
 import ir.ashkan.hokm.Deck._
 import ir.ashkan.hokm.Suite._
 import scala.Console.println
@@ -12,16 +15,16 @@ object Game extends App { gameInProgress =>
 
   implicit val ordering = CardOrdering(SuiteOrdering(Hearts, Spades, Diamonds, Clubs), RankOrdering.natural)
 
-  implicit class ConsoleContext(private val sc:StringContext) extends {
-    def hokm(args: Any*): String = {
-      val vs = args map {
-        case team:Team => "Team"
-        case _ => "Dunno!"
-      }
-
-      (vs mkString ",") + (sc.parts mkString "|")
-    }
-  }
+//  implicit class ConsoleContext(private val sc:StringContext) extends {
+//    def hokm(args: Any*): String = {
+//      val vs = args map {
+//        case team:Team => "Team"
+//        case _ => "Dunno!"
+//      }
+//
+//      (vs mkString ",") + (sc.parts mkString "|")
+//    }
+//  }
 
   val (h1,h2,h3,h4) = Deck.deal
   val List(p1,p2,p3,p4) = Random.shuffle(List(
@@ -39,18 +42,14 @@ object Game extends App { gameInProgress =>
   val TrumpCallerTeamMateCrown = Crown + Console.RESET
   val TrumpCallerCrown = Console.BOLD + Console.YELLOW + TrumpCallerTeamMateCrown
 
-
-  println(hokm"$team1 vs $team2")
-
   println(s"$team1 vs $team2")
   println(s"$trumpCaller, call trumps:")
 
   val interface = new ConsoleInterface {
     val cardOrdering = ordering
   }
-
   val trumps = interface.pickCard(trumpCaller, 5).suite
-  Card.trumps = trumps
+  interface.trumps = trumps
 
   var lead = trumpCaller
   repeatUntil[Team] {
@@ -58,7 +57,7 @@ object Game extends App { gameInProgress =>
     playTrick(trick)
     lead = trick.winner
 
-    val winnerTeam = team(lead)
+    val winnerTeam: Team = team(lead)
     winnerTeam.score += 1
     println(s"$winnerTeam took the deal")
 
@@ -139,7 +138,11 @@ object Game extends App { gameInProgress =>
 
     override def toString = {
       val plays = Map(lead->leadCard,second->card2,third->card3,fourth->card4) filter { case (_,card) => card != null }
-      plays map { case (player,card)=> if(player == winner) Console.BOLD+s"$player $card"+Console.RESET else s"$player $card" } mkString "  "
+      plays map { case (player,card)=>
+        if(player == winner)
+          Console.BOLD+s"$player " + interface.print(card) + Console.RESET
+        else
+          s"$player" + interface.print(card) } mkString "  "
     }
   }
 
@@ -163,43 +166,41 @@ abstract class ConsoleInterface {
   import Game.Player
 
   implicit def cardOrdering: Ordering[Card]
+  var trumps: Suite = _
+
+  import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
+  private val black = Console.WHITE_B+ Console.BLACK
+  private val red = Console.WHITE_B + Console.RED
+  private val color = Map( Hearts -> red,  Diamonds -> red, Clubs -> black, Spades -> black)
+
+  def print(card: Card): String =  {
+    val c: String = color(card.suite) + s"${card.rank}${card.suite}" + Console.RESET
+    if(card.suite == trumps)  Console.YELLOW + s"\u2654"  + c else c
+  }
 
   def pickCard(player: Player, howMany: Int = Deck.HandSize): Card = {
     require(howMany >0 && howMany <= Deck.HandSize)
-    pickCard(player.hand.toList.take(howMany))
+    pickCard(player.hand.toList.take(howMany),Seq())
   }
 
-  def pickCard(player: Player, leadSuite: Suite): Card = {
-    val (valids,invalids) = player.partition(leadSuite)
-    pickCard(valids,invalids)
+  def pickCard(player: Player, lead: Suite): Card = {
+    val (valids,invalids) = player.partition(lead)
+    pickCard(valids.toSeq,invalids.toSeq)
   }
 
-  def pickCard(valids: Batch, invalids: Batch): Card = {
-    val menu = SortedMap(('a' to 'z').zip(valids.toList.sorted) :_*)
-    val validChoices = menu.keys.toSet
+  private def pickCard(valids: Seq[Card], invalids: Seq[Card]): Card = {
+    val menu = SortedMap(('a' to 'z').zip(valids): _*)
+    val choices = menu.keySet
+    val canPicks = menu map { case (char, card) => s"$char" + print(card) }
+    val all = (canPicks ++ invalids.map(print)) mkString " "
 
     val choice = repeatUntil {
-      val canPicks = menu map { case (choice, card) => s"$choice $card" } mkString " "
-      val cantPicks = invalids.toList.sorted.mkString(" ")
-      println(canPicks + " " + cantPicks)
+      println(all)
       println("Which one ? ")
-      scala.io.StdIn.readChar()
-    } (choice => validChoices contains choice)
-
-    menu(choice)
-  }
-
-  def pickCard(cards: Deck): Card = {
-    val menu = SortedMap(('a' to 'z').zip(cards.sorted) :_*)
-    val validChoices = menu.keys.toSet
-
-    val choice = repeatUntil {
-      println(menu map { case (choice, card) => s"$choice $card" } mkString " ")
-      println("Which one ? ")
-      val input = scala.io.StdIn.readChar()
-      if(input == 'z') sys.exit(1)
-      input
-    } (choice => validChoices contains choice)
+      val choice = scala.io.StdIn.readChar()
+      if (choice == 'z') System.exit(1)
+      choice
+    }(choice => choices contains choice)
 
     menu(choice)
   }
