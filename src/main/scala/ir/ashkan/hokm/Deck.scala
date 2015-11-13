@@ -19,10 +19,4 @@ object Deck {
 
   val allCards: Batch = hearts ++ clubs ++ spades ++ diamonds
   def deck: Deck = Random.shuffle(Deck.allCards.toList)
-  def deal: (Hand,Hand,Hand,Hand) = {
-    val List(h1,h2,h3,h4) = deck.grouped(Deck.HandSize).toList
-    (h1,h2,h3,h4)
-  }
-
-  implicit def toHand(cards:List[Card]): Hand = mutable.Set(cards: _*)
 }
