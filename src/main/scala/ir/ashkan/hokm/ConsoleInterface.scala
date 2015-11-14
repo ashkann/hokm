@@ -1,21 +1,20 @@
 package ir.ashkan.hokm
 
-import ir.ashkan.hokm.Game.Team
 import scala.collection.SortedMap
 import scala.Console._
+import DSL._
 
 abstract class ConsoleInterface {
-  import DSL._
-  import Game.Player
 
   implicit def cardOrdering: Ordering[Card]
   var trumps: Suite = _
-  var trumpCaller: Player = _
-  var trumpCallerTeamMate: Player = _
+  var goldPlayer: Player = _
+  var silverPlayer: Player = _
 
   def print(card: Card): String = decor(card) + plain(card)
   def print(player: Player): String = decor(player) + plain(player)
   def print(team: Team): String = print(team.player1) + " and " + print(team.player2)
+  def print(trick: Trick): String = trick.plays map { case (p,c)=> decor(trick, p) + print(p,c) } mkString " "
 
   def pickCard(player: Player, howMany: Int = Deck.HandSize): Card = {
     require(howMany >0 && howMany <= Deck.HandSize)
@@ -40,11 +39,13 @@ abstract class ConsoleInterface {
   private def plain(p: Player) = p.name
   private def plain(c: Card) = color(c.suite) + s"${c.rank}${c.suite}" + Console.RESET
   private def decor(c: Card) =  if (c.suite == trumps) goldenCrown else ""
-  private def decor(p: Player) = if (p == trumpCaller)
+  private def decor(p: Player) = if (p == goldPlayer)
     goldenCrown
-  else if (p == trumpCallerTeamMate)
+  else if (p == silverPlayer)
     silverCrown
   else ""
+  private def decor(t: Trick, p: Player): String = if(p == t.winner) Console.BOLD else ""
+  private def print(p:Player,c:Card): String = print(p) + "  " + print(c) + Console.RESET
 
   private def pickCard(valids: Seq[Card], invalids: Seq[Card]): Card = {
     val menu = SortedMap(('a' to 'z').zip(valids): _*)
