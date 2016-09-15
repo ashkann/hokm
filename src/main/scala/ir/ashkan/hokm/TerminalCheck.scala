@@ -11,6 +11,8 @@ import scala.collection.mutable.{Set => Hand}
 object TerminalCheck extends App { app =>
   val goldPlayer = new Player("Ashkan", Hand(Ace of Spades))
   val silverPlayer = new Player("Sepideh", Hand(Ace of Spades))
+  val player3 = new Player("Ramin", Hand(Ace of Spades))
+  val player4 = new Player("Shabnam", Hand(Ace of Spades))
 
   val ui = new Terminal2D {
     val cardOrdering = CardOrdering.natural
@@ -19,4 +21,5 @@ object TerminalCheck extends App { app =>
   }
 
   println (Suite.suites().foldRight(Element.Nil){ (suite,deck) => ui(suite.cards()) above deck })
+  println ( ui(new Team(goldPlayer,silverPlayer)) besides Element(" vs ") besides ui(new Team(player3,player4)))
 }
