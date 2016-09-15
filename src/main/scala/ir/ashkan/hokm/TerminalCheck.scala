@@ -21,5 +21,7 @@ object TerminalCheck extends App { app =>
   }
 
   println (Suite.suites().foldRight(Element.Nil){ (suite,deck) => ui(suite.cards()) above deck })
-  println ( ui(new Team(goldPlayer,silverPlayer)) besides Element(" vs ") besides ui(new Team(player3,player4)))
+  println ( ui(new Team(goldPlayer,silverPlayer)) beside Element(" vs ") beside ui(new Team(player3,player4)))
+  val (team1,team2) = Table.deal
+  ui.pick(team1.player1,5)
 }
