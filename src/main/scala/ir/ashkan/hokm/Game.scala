@@ -1,70 +1,90 @@
 package ir.ashkan.hokm
 
-import ir.ashkan.hokm.Suite._
 import scala.Console.println
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 import DSL._
-import ir.ashkan.hokm.Deck.Hand
 
-object Game extends App { gameInProgress =>
+object Game extends App {
 
-  implicit val ordering = CardOrdering(SuiteOrdering(Hearts, Spades, Diamonds, Clubs), RankOrdering.natural)
-
-  val (h1,h2,h3,h4) = deal
-  val List(p1,p2,p3,p4) = Random.shuffle(List(
-    new Player("Jake", h1),
-    new Player("Bella", h2),
-    new Player("Edward", h3),
-    new Player("Ashkan", h4)
-  ))
-  val team1 = new Team(p1,p3)
-  val team2 = new Team(p2,p4)
+  val (team1,team2) = deal
   val trumpCaller = team1.player1
 
-  val interface = new ConsoleInterface {
-    val cardOrdering = ordering
+  val ui = new Terminal2D {
+    val cardOrdering = CardOrdering.natural
+    val goldPlayer = trumpCaller
+    val silverPlayer = team1.player2
   }
-  interface.goldPlayer = trumpCaller
-  interface.silverPlayer = team1.player2
 
-  println(interface.print(team1) + " vs " + interface.print(team2))
-  println(interface.print(trumpCaller) + " call trumps:")
+  val trumps = callTrumps
+  ui.trumps = trumps
 
-  val trumps = interface.pickCard(trumpCaller, 5).suite
-  interface.trumps = trumps
+  val round = playHand(trumpCaller)
+  println(ui(round.lastWinner) + " took the round")
 
-  var lead = trumpCaller
-  repeatUntil[Team] {
-    val trick = new Trick(lead,team1,team2,ordering)
-    playTrick(trick)
-    lead = trick.winner
+  def callTrumps: Suite = {
+    println(ui(team1) + " vs " + ui(team2))
+    println(ui(trumpCaller) + " call trumps:")
 
-    val winnerTeam = team(lead)
-    winnerTeam.score += 1
-    println(interface.print(winnerTeam) + " took the deal")
+    ui.pick(trumpCaller, 5).suite
+  }
 
-    winnerTeam
-  } (winner => winner.score >= 7)
+  def playHand(eldest: Player): Hand = {
+    val hand = new Hand(team1,team2)
 
+    repeatUntil2[Hand,Player] { lead =>
+      val trick = playTrick(lead)
 
-  def team(player: Player): Team = if(player playsIn team1) team1 else team2
+      hand.trickFinished(trick.takerTeam)
+      println(ui(trick.takerTeam) + " took the trick")
 
-  def playTrick(trick: Trick) {
-    println(interface.print(trick.lead) + ", you are the trick-leader. Play a card")
-    trick(1) = interface.pickCard(trick.lead)
-    println(interface.print(trick))
+      println(ui(hand.team1) + ":" + hand.score(team1))
+      println(ui(hand.team2) + ":" + hand.score(team2))
 
-    for(turn <- 2 to 4) {
-      println(interface.print(trick.player(turn)) + ", play a card")
-      trick(turn) = interface.pickCard(trick.player(turn),trick.leadSuite)
-      println(interface.print(trick))
+      (hand,trick.taker)
+    }(_.lastWinnerScore >= 1)(eldest)
+  }
+
+  def playTrick(lead: Player): Trick = {
+    val trick = new Trick(lead, team1, team2, CardOrdering(trumps))
+
+    println(ui(lead) + ", lead")
+    trick(lead) = ui.pick(lead, Deck.HandSize)
+    println(ui(trick))
+
+    for (player <- trick.others) {
+      println(ui(player) + ", play a card")
+      trick(player) = ui.pick(player, trick.leadSuite)
+      println(ui(trick))
     }
+    trick
   }
 
-  def deal: (Hand,Hand,Hand,Hand) = {
-    val List(h1,h2,h3,h4) = Deck.deck.grouped(Deck.HandSize).toList
-    (h1,h2,h3,h4)
+  class Hand(val team1: Team, val team2: Team) {
+    val tricks = List()
+    private val hands = ArrayBuffer[Team]()
+
+    def score(t: Team): Int = hands.count(_ == t)
+    def trickFinished(winner: Team) { hands += winner }
+    def lastWinner = hands.last
+    def lastWinnerScore = score(lastWinner)
   }
-  implicit def toHand(cards:List[Card]): Hand = mutable.Set(cards: _*)
+
+  private def deal: (Team,Team) = {
+    import ir.ashkan.hokm.Deck.{Hand => H}
+
+    def toHand(cards:List[Card]): H = mutable.Set(cards: _*)
+
+    val List(h1,h2,h3,h4) = Deck.deck.grouped(Deck.HandSize).toList
+
+    val List(p1,p2,p3,p4) = Random.shuffle(List(
+      new Player("Jake", toHand(h1)),
+      new Player("Bella", toHand(h2)),
+      new Player("Edward", toHand(h3)),
+      new Player("Ashkan", toHand(h4))
+    ))
+
+    (new Team(p1,p3),new Team(p2,p4))
+  }
 }

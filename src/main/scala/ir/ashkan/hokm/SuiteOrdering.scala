@@ -1,4 +1,5 @@
 package ir.ashkan.hokm
+import ir.ashkan.hokm.Suite._
 
 abstract class SuiteOrdering extends Ordering[Suite] {
   def score(suite: Suite): Int
@@ -7,6 +8,8 @@ abstract class SuiteOrdering extends Ordering[Suite] {
 }
 
 object SuiteOrdering {
+  val natural = SuiteOrdering(Hearts, Spades, Diamonds, Clubs)
+
   var orderingInEffect: SuiteOrdering = _
   def winner(hand: Set[Suite]) = orderingInEffect.winner(hand)
   def winner(hand: Suite*): Suite = winner(hand.toSet)

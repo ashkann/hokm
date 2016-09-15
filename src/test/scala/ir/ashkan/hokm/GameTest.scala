@@ -1,41 +1,42 @@
-package ir.ashkan.hokm
-
-import org.scalatest._
-import Renderer._
-import ir.ashkan.hokm.Suite.{Hearts,Spades,Diamonds,Clubs}
-import ir.ashkan.hokm.Rank.{_2,_3,_4,_5,_6,_7,_8,_9,_10,Jack,Queen,King,Ace}
-
-class GameTest extends FunSuite with Matchers {
-
-  test("Empty strings") {
-    h"" should be("")
-  }
-
-  test("Pure string (no interpolation involved)") {
-    h"no interpolation" should be(s"no interpolation")
-  }
-
-  test("just a single injection") {
-    h"${1}" should be(s"${1}")
-  }
-
-  test("Two adjacent injections") {
-    h"${1}${2}" should be(s"${1}${2}")
-  }
-
-  test("Interleaved injections") {
-    h"first number is ${1}, and then there is ${2}!" should be(s"first number is ${1}, and then there is ${2}!")
-  }
-
-  test("Suites are rendered by Renderer.renderer") {
-
-    h"$Hearts" should be(renderer(Hearts))
-    h"$Diamonds" should be(renderer(Diamonds))
-    h"$Clubs" should be(renderer(Clubs))
-    h"$Spades" should be(renderer(Spades))
-  }
-
-  test("Cards are rendered by Renderer.renderer") {
-    h"${Card(Hearts, Ace)}" should be(renderer(Hearts, Ace))
-  }
-}
+//package ir.ashkan.hokm
+//
+//import ir.ashkan.hokm.Game.Round
+//import org.scalatest._
+//
+//import scala.collection.mutable
+//
+///**
+//  * Created by ashkan on 2/15/16.
+//  */
+//class GameTest extends FreeSpec with Matchers  {
+//
+//  val player1: Player = new Player("p1",mutable.Set[Card]())
+//  val player2: Player = new Player("p2",mutable.Set[Card]())
+//  val player3: Player = new Player("p3",mutable.Set[Card]())
+//  val player4: Player = new Player("p4",mutable.Set[Card]())
+//
+//  val team1 = new Team(player1,player2)
+//  val team2 = new Team(player3,player4)
+//
+//  "A round" - {
+//
+//    "have no tricks when just created" in {
+//      val round = new Round(team1,team2)
+//      assert(round.tricks.isEmpty)
+//    }
+//
+//    "remembers the tricks played so far" in {
+//      val round = new Round(team1,team2)
+//      round.tricks += new Trick()
+//    }
+//
+//    "have two participating teams" in {
+//      val round= new Round(team1, team2)
+//      assert(round.team1 == team1)
+//      assert(round.team2 == team2)
+//    }
+//
+//  }
+//
+//
+//}

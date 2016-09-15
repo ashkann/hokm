@@ -1,18 +1,42 @@
-package scala.ir.ashkan.hokm
+package ir.ashkan.hokm
 
-/**
- * Created by ashkan on 8/3/15.
- */
+
 object Learn extends App {
-  implicit def typeEqCommutes[A,B](ev: A=:=B): B=:=A = ev.asInstanceOf[B=:=A]
 
-  class Pair[T, S](var first: T, var second: S) {
-    def swap(implicit ev: S =:= T) {
-      implicit val ev2 = typeEqCommutes(ev)
+  class Outter {
+    type Inner = Either[Int,String]
+    type L = Left[Int,String]
+    type R = Right[Int,String]
 
-      val temp = first
-      first = second //error: type mismatch; found: S required: T
-      second = temp
-    }
+    def f(x: Inner) = 1
   }
+
+  val o = new Outter
+  o.f(new o.L(1))
+  o.f(new o.R("name"))
+
+//  case class A()
+//  case class B(a: A) {
+//    def f(x: a.type) = true
+//  }
+//
+//  val a = A()
+//  val b = B(a)
+//  b.f(b.a)
+
+
+//  val p1 = new Player("",Deck.emptyHand)
+//  val p2 = new Player("",Deck.emptyHand)
+//  val p3 = new Player("",Deck.emptyHand)
+//
+//  val team = new Team(p1,p2)
+//
+//  val ev = new team.P
+//  team.position(team.player1)
+//  team.position(team.player2)
+//  team.position(p3)
+
+//  team.position2(team.player1)(team.ev1)
+//  team.position2(team.player2)
+//  team.position2(p3)
 }

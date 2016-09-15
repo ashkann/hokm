@@ -8,9 +8,12 @@ class CardOrdering(suites: SuiteOrdering, ranks: RankOrdering) extends Ordering[
 }
 
 object CardOrdering {
+  val natural = CardOrdering(SuiteOrdering.natural, RankOrdering.natural)
+
   var orderingInEffect: CardOrdering = new CardOrdering(SuiteOrdering.orderingInEffect,RankOrdering.orderingInEffect) {}
 
   def apply(suites: SuiteOrdering, ranks: RankOrdering) = new CardOrdering(suites,ranks)
+  def apply(trumps: Suite) = new CardOrdering(SuiteOrdering(trumps),RankOrdering.natural)
 
   implicit class OrderedCard(card: Card) extends Ordered[Card] {
     def compare(that: Card) = orderingInEffect.compare(card,that)

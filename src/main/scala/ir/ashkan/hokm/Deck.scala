@@ -9,6 +9,9 @@ object Deck {
   type Batch = Set[Card]
   type Deck = List[Card]
 
+  private val Hand = mutable.Set
+  val emptyHand: Hand = Hand.empty
+
   val HandSize = 13
   val DeckSize = 52
 

@@ -2,23 +2,33 @@ package ir.ashkan.hokm
 
 import ir.ashkan.hokm.Deck.Deck
 
-class Trick(val lead: Player, team1: Team, team2: Team, implicit private val ordering: CardOrdering) {
+class Trick(val lead: Player,val team1: Team, val team2: Team, ordering: CardOrdering) {
+//  type P = team1.P
+
   private var leadCard, card2, card3, card4 : Card = _
 
-  private val second: Player = nextPlayer(lead)
-  private val third:  Player = nextPlayer(second)
-  private val fourth: Player = nextPlayer(third)
+//  private val second2: Player = next(new Player("invalid",Deck.emptyHand))
+  private val second: Player = next(lead)
+  private val third:  Player = next(second)
+  private val fourth: Player = next(third)
+  val players: Seq[Player] = Seq(lead,second,third,fourth)
+  val others: Seq[Player] = players.tail
 
   lazy val leadSuite: Suite = leadCard.suite
-  def winner: Player = playerOf(topCard)
-  def topCard: Card = cards.max
-  def plays: Map[Player,Card] = Map(lead->leadCard,second->card2,third->card3,fourth->card4) filter { case (_,card) => card != null }
+  def taker: Player = playerOf(topCard)
+  def takerTeam: Team = teamOf(taker)
+  def topCard: Card = cards.max(ordering)
+  def plays: Map[Player,Card] = Map(
+    lead->leadCard,
+    second->card2,
+    third->card3,
+    fourth->card4) filter { case (_,card) => card != null }
 
-  def update(index: Int, card: Card): Unit = index match {
-    case 1 => leadCard = card
-    case 2 => card2 = card
-    case 3 => card3 = card
-    case 4 => card4 = card
+  def update(player: Player, card: Card): Unit = player match {
+    case `lead`   => leadCard = card
+    case `second` => card2 = card
+    case `third`  => card3 = card
+    case `fourth` => card4 = card
   }
 
   def apply(index: Int): Card = index match {
@@ -44,10 +54,11 @@ class Trick(val lead: Player, team1: Team, team2: Team, implicit private val ord
     card4->fourth
   )(card)
 
-  private def nextPlayer(current: Player) = current match {
-    case team1.player1 => team2.player1
-    case team2.player1 => team1.player2
-    case team1.player2 => team2.player2
-    case team2.player2 => team1.player1
+  private def teamOf(player: Player): Team = if(player playsIn team1) team1 else team2
+
+  private def next(current: Player) = {
+    val table : Seq[Player] = Seq(team1.player1,team2.player1,team1.player2,team2.player2)
+    val currentPosition = table.indexOf(current)
+    table(if (currentPosition == 3) 0 else currentPosition + 1)
   }
 }
