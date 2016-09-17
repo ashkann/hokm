@@ -24,5 +24,5 @@ object TerminalCheck extends App { app =>
 
   val table = new Table(Team(goldPlayer,silverPlayer),Team(player3,player4))
   println ( ui(table.team1) beside Element(" vs ") beside ui(table.team2))
-  ui.pick(table.ph(goldPlayer).toSeq.sorted(CardOrdering.natural),Seq[Card]())
+  ui.pick(table.hand(goldPlayer),Seq[Card]())
 }

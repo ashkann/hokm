@@ -10,12 +10,14 @@ class Table
   val team2: Team
 ) {
   private[this] val (h1,h2,h3,h4) = Table.deal
-  val ph = Map[Player,Hand](
+  private val hands = Map[Player,Hand](
     team1.player1 -> h1,
     team1.player2 -> h2,
     team2.player1 -> h3,
     team2.player2 -> h4
   )
+
+  def hand(who:Player):Seq[Card] = hands(who).toSeq.sorted(CardOrdering.natural)
 }
 
 object Table {
