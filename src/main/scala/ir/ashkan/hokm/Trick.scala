@@ -2,7 +2,7 @@ package ir.ashkan.hokm
 
 import ir.ashkan.hokm.Deck.Deck
 
-class Trick(val lead: Player,val team1: Team, val team2: Team, ordering: CardOrdering) {
+class Trick(val lead: Player, val team1: Team, val team2: Team, ordering: CardOrdering) {
 //  type P = team1.P
 
   private var leadCard, card2, card3, card4 : Card = _

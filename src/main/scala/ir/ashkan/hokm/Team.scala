@@ -1,6 +1,6 @@
 package ir.ashkan.hokm
 
-class Team(val player1: Player, val player2: Player) {
+case class Team(player1: Player, player2: Player) {
    def contains(player: Player): Boolean = player == player1 || player == player2
 }
 

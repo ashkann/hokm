@@ -29,18 +29,18 @@ trait Player2D {
   val goldPlayer: Player
   val silverPlayer: Player
 
-  private val goldPlayerDecorator: Decor = Element.double
-  private val silverPlayerDecorator: Decor = Element.single
-  private val normalPlayerDecorator: Decor = Element.round
+  private val goldPlayerDecor: Decor = Element.double
+  private val silverPlayerDecor: Decor = Element.single
+  private val normalPlayerDecor: Decor = Element.round
 
   def print(player: Player): Element = decor(player)(plain(player))
 
   private def plain(player: Player): Element = Element(player.name)
 
   private def decor(player: Player): Decor = player match  {
-    case `goldPlayer` => goldPlayerDecorator
-    case `silverPlayer` => silverPlayerDecorator
-    case _ => normalPlayerDecorator
+    case `goldPlayer` => goldPlayerDecor
+    case `silverPlayer` => silverPlayerDecor
+    case _ => normalPlayerDecor
   }
 }
 
@@ -49,17 +49,17 @@ trait Menu2D {
   def print(c:Card):Element
 //  def print(cs:Seq[Card]):Element
 
-  def pick(player: Player, howMany: Int): Card = {
-    require(howMany > 0 && howMany <= Deck.HandSize)
-    pick(player.hand.toList.take(howMany), Seq())
-  }
+//  def pick(player: Player, howMany: In): Card = {
+//    require(howMany > 0 && howMany <= Deck.HandSize)
+//    pick(player.hand.toList.take(howMany), Seq())
+//  }
 
-  def pick(player: Player, lead: Suite): Card = {
-    val (valids, invalids) = player.partition(lead)
-    pick(valids.toSeq, invalids.toSeq)
-  }
+//  def pick(player: Player, lead: Suite): Card = {
+//    val (valids, invalids) = player.partition(lead)
+//    pick(valids.toSeq, invalids.toSeq)
+//  }
 
-  private def pick(valids: Seq[ Card ], invalids: Seq[ Card ]): Card = {
+  def pick(valids: Seq[ Card ], invalids: Seq[ Card ]): Card = {
     val menu = SortedMap(('a' to 'z').zip(valids): _*)
     val choices = menu.keySet
     val canPicks = menu map { case (char, card) => print(card) above Element.single(Element(char)) }
