@@ -17,7 +17,7 @@ class Table
     team2.player2 -> h4
   )
 
-  def hand(who:Player):Seq[Card] = hands(who).toSeq.sorted(CardOrdering.natural)
+  def hand(who:Player):Hand = hands(who)
 }
 
 object Table {
