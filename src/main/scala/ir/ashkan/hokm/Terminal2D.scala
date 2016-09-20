@@ -1,8 +1,7 @@
 package ir.ashkan.hokm
 
 import ir.ashkan.hokm.DSL._
-import ir.ashkan.layout.Element
-
+import ir.ashkan.layout.{Element, Round, Single,Double,Thick,Bottom,Top}
 import scala.Console._
 import scala.collection.SortedMap
 
@@ -15,10 +14,11 @@ trait Card2D {
     val padding = if (card.rank == Rank._10) space else space * 2
     val s = card.suite.symbol
     val r = card.rank.name
-    Element.round(
+
+    Round(
       Element(s + padding + r) above
-        Element(space) above
-        Element(r + padding + s)
+      Element(space) above
+      Element(r + padding + s)
     )
   }
 }
@@ -29,9 +29,9 @@ trait Player2D {
   val goldPlayer: Player
   val silverPlayer: Player
 
-  private val goldPlayerDecor: Decor = Element.double
-  private val silverPlayerDecor: Decor = Element.single
-  private val normalPlayerDecor: Decor = Element.round
+  private val goldPlayerDecor: Decor = Round
+  private val silverPlayerDecor: Decor = Single
+  private val normalPlayerDecor: Decor = Round
 
   def print(player: Player): Element = decor(player)(plain(player))
 
@@ -61,8 +61,12 @@ trait Menu2D {
 
   def pick(valids: Seq[ Card ], invalids: Seq[ Card ]): Card = {
     val menu = SortedMap(('a' to 'z').zip(valids): _*)
+
     val choices = menu.keySet
-    val canPicks = menu map { case (char, card) => print(card) above Element.single(Element(char)) }
+
+    val canPicks = menu map { case (char, card) =>
+      print(card) above Element(s" \u25B3 $char")
+    }
     val all = Element.beside((canPicks ++ invalids.map(print)).toSeq)
 
     val choice = repeatUntil[ Char ] {
