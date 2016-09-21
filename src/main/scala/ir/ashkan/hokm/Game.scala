@@ -7,9 +7,9 @@ import ir.ashkan.layout.{Element, Thick}
 object Game extends App {
   val name = scala.io.StdIn.readLine("What's your name? ")
   val p1 = Player(name)
-  val p2 = Player("Bella")
-  val p3 = Player("Edward")
-  val p4 = Player("Ashkan")
+  val p2 = Player("Sepideh")
+  val p3 = Player("Ramin")
+  val p4 = Player("Shabnam")
 
   val table = new Table(Team(p1,p2),Team(p3,p4))
 
@@ -25,7 +25,6 @@ object Game extends App {
   ui.trumps = trumps
 
     val round = playDeal(trumpCaller)
-  //  println(ui(round.lastWinner) + " took the round")
 
   def callTrumps: Suite = {
     println(Thick(Element("call trumps")) )
@@ -52,12 +51,8 @@ object Game extends App {
   def playTrick(lead: Player): Trick = {
     val trick = new Trick(lead, table.team1, table.team2, CardOrdering(trumps))
 
-    println(ui(lead) + ", lead")
-    trick(lead) = ui.pick(table.hand(lead).toSeq.sorted(CardOrdering(trumps)),Nil)
-    println(ui(trick))
-
-    for (player <- trick.others) {
-      println(ui(player) + ", play a card")
+    for (player <- table.turn(lead)) {
+      println( ui(player) beside  Thick(Element(" play a card")) )
       trick(player) = ui.pick(table.hand(player).toSeq.sorted(CardOrdering(trumps)),Nil)
       println(ui(trick))
     }

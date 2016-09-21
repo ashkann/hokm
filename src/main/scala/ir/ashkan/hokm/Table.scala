@@ -18,6 +18,7 @@ class Table
   val team2: Team
 ) {
   private[this] val (h1,h2,h3,h4) = Table.deal
+  private[this] val players = Seq(team1.player1,team2.player1,team1.player2,team2.player2)
   private val hands = Map[Player,H](
     team1.player1 -> h1,
     team1.player2 -> h2,
@@ -26,6 +27,9 @@ class Table
   )
 
   def hand(who:Player):H= hands(who)
+
+  def turn(lead:Player): Seq[Player] = turn(players.indexOf(lead))
+  private def turn(from:Int): Seq[Player] = (0 to 3).map { i => players(from + i % 4) }
 }
 
 
