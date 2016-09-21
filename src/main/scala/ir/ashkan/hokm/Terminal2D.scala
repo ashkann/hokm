@@ -1,7 +1,7 @@
 package ir.ashkan.hokm
 
 import ir.ashkan.hokm.DSL._
-import ir.ashkan.layout.{Element, Round, Single,Double,Thick,Bottom,Top}
+import ir.ashkan.layout.{Element,Round, Single,Double,Thick,Bottom,Top}
 import scala.Console._
 import scala.collection.SortedMap
 
@@ -42,6 +42,8 @@ trait Player2D {
     case `silverPlayer` => silverPlayerDecor
     case _ => normalPlayerDecor
   }
+
+  def print(team: Team): Element = Double(print(team.player1) beside print(team.player2))
 }
 
 trait Menu2D {
@@ -93,11 +95,10 @@ abstract class Terminal2D extends Card2D with Player2D with Menu2D {
   def apply(team: Team) = print(team)
   def apply(trick: Trick) = print(trick)
 
-  def print(team: Team): Element = this(team.player1) beside this(team.player2)
+  def print(trick: Trick): Element = trick.plays.foldRight(Element.Nil) { case ((player,card),e) =>
+    (print(player) above print(card)) beside e
+  }
 
-  def print(trick: Trick): String = trick.plays map { case (player, card) =>
-    (if (player == trick.taker) winnerDecoration else noDecoration) + print(player) + print(card) + end
-  } mkString space
 
   // Decorations and Plains
   private val end = Console.RESET
