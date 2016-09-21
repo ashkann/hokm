@@ -71,7 +71,7 @@ trait Menu2D {
 
     val choice = repeatUntil[ Char ] {
       println(all)
-      println("Which one ? ")
+      println(Thick(Element(" Which one ? ")))
       val choice = scala.io.StdIn.readChar()
       if (choice == 'z') System.exit(1)
       choice

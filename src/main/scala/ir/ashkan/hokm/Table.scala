@@ -2,7 +2,15 @@ package ir.ashkan.hokm
 
 import scala.collection.mutable
 import scala.util.Random
-import ir.ashkan.hokm.Deck.Hand
+import ir.ashkan.hokm.Deck.{ Hand => H }
+
+case class Player(name: String) {
+  def playsIn(team: Team) = team contains this
+}
+
+case class Team(player1: Player, player2: Player) {
+  def contains(player: Player): Boolean = player == player1 || player == player2
+}
 
 class Table
 (
@@ -10,19 +18,20 @@ class Table
   val team2: Team
 ) {
   private[this] val (h1,h2,h3,h4) = Table.deal
-  private val hands = Map[Player,Hand](
+  private val hands = Map[Player,H](
     team1.player1 -> h1,
     team1.player2 -> h2,
     team2.player1 -> h3,
     team2.player2 -> h4
   )
 
-  def hand(who:Player):Hand = hands(who)
+  def hand(who:Player):H= hands(who)
 }
 
+
 object Table {
-  def deal: (Hand,Hand,Hand,Hand) = {
-    def toHand(cards:List[Card]): Hand = mutable.Set(cards: _*)
+  def deal: (H,H,H,H) = {
+    def toHand(cards:List[Card]): H = mutable.Set(cards: _*)
 
     val List(h1,h2,h3,h4) = deck.grouped(Deck.HandSize).toList
     (toHand(h1),toHand(h2),toHand(h3),toHand(h4))

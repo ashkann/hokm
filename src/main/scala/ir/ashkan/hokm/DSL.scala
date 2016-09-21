@@ -16,11 +16,11 @@ object DSL {
     }
   }
 
-  def repeatUntil2[OUT, I](code: I => (OUT, I))(condition: OUT => Boolean)(initial: I): OUT = {
+  def repeatUntil[OUT, I](code: I => (OUT, I))(condition: OUT => Boolean)(initial: I): OUT = {
     val (result, nextInitial) = code(initial)
     if (condition(result))
       result
     else
-      repeatUntil2(code)(condition)(nextInitial)
+      repeatUntil(code)(condition)(nextInitial)
   }
 }
